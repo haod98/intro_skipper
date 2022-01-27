@@ -16,3 +16,16 @@ button {
 button:hover {
     background: #cccccc;
 }
+
+.error {
+    border: 1px red solid;
+}
+
+.error-msg {
+    color: red;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
