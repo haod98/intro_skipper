@@ -1,13 +1,9 @@
 let btn = document.querySelector(".skip");
-btn.addEventListener('click', async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: skipTime
-    })
+btn.addEventListener('click', () => {
+    let timeValue = document.querySelector('#time').value;
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, { getTime: timeValue }, (response) => {
+            console.log(response.updatedTime);
+        });
+    });
 });
-
-function skipTime() {
-    const video = document.querySelector('video')
-    video.currentTime += 90; //1 min 30 sec
-}
