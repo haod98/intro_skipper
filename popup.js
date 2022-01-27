@@ -7,7 +7,7 @@ btn.addEventListener('click', () => {
     let timeValue = document.querySelector('#time').value;
     input.classList.remove('error');
     removeErrorMessage();
-    if (!timeValue.match(/^[0-9]+$/)) { //Check if input is a int
+    if (!timeValue.match(/^[0-9]+$/)) { //Check if input is an int
         input.classList.add('error');
         createErrorMessage();
         return;
