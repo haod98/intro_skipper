@@ -5,4 +5,7 @@ chrome.commands.onCommand.addListener((command) => {
             chrome.runtime.sendMessage({ msg: command });
             break;
     };
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, { command: command })
+    })
 });
