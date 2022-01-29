@@ -2,7 +2,7 @@ const btn = document.querySelector(".skip");
 const input = document.querySelector('.input');
 const error_msg = document.querySelector('.errorMsg');
 const settings = document.querySelector('.settings');
-btn.addEventListener('click', () => {
+const fastForward = () => {
     input.classList.remove('error');
     let timeValue = document.querySelector('#time').value;
     removeErrorMessage();
@@ -12,10 +12,19 @@ btn.addEventListener('click', () => {
         return;
     };
     sendTimeToContentSide(timeValue);
-});
-
+};
+btn.addEventListener('click', fastForward); //Pop up event 
+//Short cut listener
+chrome.runtime.onMessage.addListener(
+    (request) => {
+        switch (request.msg) {
+            case ('fast-forward'):
+                fastForward();
+                break;
+        };
+    }
+);
 const sendTimeToContentSide = (time) => {
-    console.log(time);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, { getTime: time }, (response) => {
             console.log(response.updatedTime);

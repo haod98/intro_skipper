@@ -3,6 +3,9 @@
   "description": "Skip intros",
   "version": "1.0",
   "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
   "permissions": ["activeTab", "scripting", "tabs"],
   "action": {
     "default_icon": {
@@ -12,6 +15,14 @@
       "128": "/images/get_started128.png"
     },
     "default_popup": "popup.html"
+  },
+  "commands": {
+    "fast-forward": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F"
+      },
+      "description": "Fast forward"
+    }
   },
   "content_scripts": [
     {
