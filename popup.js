@@ -13,6 +13,7 @@ const fastForward = () => {
     };
     sendTimeToContentSide(timeValue);
 };
+
 btn.addEventListener('click', fastForward); //Pop up event 
 //Short cut listener
 chrome.runtime.onMessage.addListener(
@@ -24,6 +25,7 @@ chrome.runtime.onMessage.addListener(
         };
     }
 );
+
 const sendTimeToContentSide = (time) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, { getTime: time }, (response) => {

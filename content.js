@@ -18,18 +18,14 @@ const localStorageSecondsExist = () => {
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log(request);
         if (request.getTime) {
             let timeInSecond = setLocalStorageSeconds(request.getTime);
-            if (request.getTime && typeof (timeInSecond) === "number" && !isNaN(timeInSecond)) { //Checks if there is getTime value, if timeSkip is a int, checks if its not a NaN, because NaN is typeof number
-                sendResponse({ updatedTime: `Time set: ${request.getTime}` });
-                fastForwardVideo(timeInSecond);
-            };
+            sendResponse({ updatedTime: `Time set: ${request.getTime}` });
+            fastForwardVideo(timeInSecond);
         } else if (request.command === "fast-forward") {
-            let fastForwardInSeconds = getLocalStorageSeconds();
-            console.log(fastForwardInSeconds);
-            sendResponse({ updatedTime: `Time set: ${fastForwardInSeconds}` });
-            fastForwardVideo(fastForwardInSeconds);
+            let timeInSeconds = getLocalStorageSeconds();
+            sendResponse({ updatedTime: `Time set: ${timeInSeconds}` });
+            fastForwardVideo(timeInSeconds);
         };
     }
 );
