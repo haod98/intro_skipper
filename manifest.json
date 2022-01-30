@@ -19,7 +19,8 @@
   "commands": {
     "fast-forward": {
       "suggested_key": {
-        "default": "Ctrl+Shift+F"
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+S"
       },
       "description": "Fast forward"
     }
