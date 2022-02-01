@@ -5,6 +5,17 @@ const setLocalStorageSeconds = (seconds) => {
     return timeToSkip;
 };
 
+window.addEventListener('load', () => {
+    chrome.storage.sync.get(null, (response) => console.log(response));
+    chrome.storage.sync.remove(["seconds", "exists"]);
+    chrome.storage.sync.get(null, (response) => console.log(response));
+    console.log(localStorageSecondsExist());
+    if (localStorageSecondsExist()) {
+        console.log("storage inside");
+        chrome.storage.sync.set({ seconds: getLocalStorageSeconds(), exists: true });
+    };
+});
+
 const getLocalStorageSeconds = () => {
     const DEFAULT_SECONDS = 60;
     const localStorage = window.localStorage;
