@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     };
 });
 
-const fastForward = async () => {
+const fastForward = () => {
     let inputValue = input.value;
     removeErrorMessage();
     if (!inputValue.match(/^[0-9]+$/)) { //Check if input only consist of ints 
@@ -23,6 +23,14 @@ const fastForward = async () => {
     };
     sendTimeToContentSide(inputValue);
 };
+
+let typingTimeout = null;
+input.addEventListener('keyup', () => {
+    if (typingTimeout !== null) clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+        fastForward();
+    }, 1000);
+});
 
 btn.addEventListener('click', fastForward); //Pop up event 
 
