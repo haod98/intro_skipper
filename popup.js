@@ -3,47 +3,29 @@ const input = document.querySelector('.input');
 const error_msg = document.querySelector('.errorMsg');
 const settings = document.querySelector('.settings');
 
-window.addEventListener('load', async () => {
-    const localStorageExists = await chrome.storage.sync.get("exists")
-    if (localStorageExists.exists) {
-        const secondsFromLocalStorage = await chrome.storage.sync.get("seconds");
-        console.log('loaded');
-        document.querySelector('#time').value = secondsFromLocalStorage.seconds;
-        // timeValue = secondsFromLocalStorage.seconds;
+window.addEventListener('DOMContentLoaded', async () => {
+    const chromeStorage = await chrome.storage.sync.get(null);
+    if (chromeStorage.exists) {
+        const chromeStoredSeconds = await chromeStorage.seconds;
+        input.value = chromeStoredSeconds;
+    } else {
+        input.value = "60";
     };
 });
 
 const fastForward = async () => {
-    chrome.storage.sync.get(null, (response) => console.log(response));
-    const localStorageExists = await chrome.storage.sync.get("exists")
-    if (localStorageExists.exists) {
-        const secondsFromLocalStorage = await chrome.storage.sync.get("seconds");
-        console.log('exists');
-        let timeValue = document.querySelector('#time').value;
-        timeValue = secondsFromLocalStorage.seconds.toString();
-        console.log(timeValue);
-        removeErrorMessage();
-        if (!timeValue.match(/^[0-9]+$/)) { //Check if input is an int
-            input.classList.add('error');
-            createErrorMessage();
-            return;
-        };
-        sendTimeToContentSide(timeValue);
-    } else {
-        console.log('default');
-        input.classList.remove('error');
-        let timeValue = document.querySelector('#time').value;
-        removeErrorMessage();
-        if (!timeValue.match(/^[0-9]+$/)) { //Check if input is an int
-            input.classList.add('error');
-            createErrorMessage();
-            return;
-        };
-        sendTimeToContentSide(timeValue);
-    }
+    let inputValue = input.value;
+    removeErrorMessage();
+    if (!inputValue.match(/^[0-9]+$/)) { //Check if input only consist of ints 
+        input.classList.add('error');
+        createErrorMessage();
+        return;
+    };
+    sendTimeToContentSide(inputValue);
 };
 
 btn.addEventListener('click', fastForward); //Pop up event 
+
 //Short cut listener
 chrome.runtime.onMessage.addListener(
     (request) => {
