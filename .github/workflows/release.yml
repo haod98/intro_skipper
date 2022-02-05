@@ -9,17 +9,15 @@ jobs:
   pre-release:
     name: "Pre Release"
     runs-on: "ubuntu-latest"
-
     steps:
-      - name: "Build & test"
-        run: |
-          echo "done!"
-
+      - name: "Zip files"
+        run: zip -r release.zip * -x .git .gitignore .github
+      - name: "Release"
+        run: echo "done!"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "Development Build"
-          files: |
-            *.jar
+          title: "Extension"
+          files: release.zip
