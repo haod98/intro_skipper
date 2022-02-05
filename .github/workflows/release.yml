@@ -3,7 +3,7 @@ name: "pre-release"
 on:
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   pre-release:
@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: "Zip files"
         run: zip -r release.zip * -x .git .gitignore .github
-      - name: "Release"
-        run: echo "done!"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
