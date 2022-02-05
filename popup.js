@@ -15,20 +15,29 @@ window.addEventListener('DOMContentLoaded', async () => { //Load initial value
 
 const fastForward = () => {
     let inputValue = input.value;
-    removeErrorMessage();
-    if (!inputValue.match(/^[0-9]+$/)) { //Check if input only consist of ints 
-        input.classList.add('error');
+    if (checkIfInputIsInt(inputValue)) {
+        removeErrorMessage();
+        sendTimeToContentSide(inputValue);
+    } else {
         createErrorMessage();
-        return;
     };
-    sendTimeToContentSide(inputValue);
 };
+
+const checkIfInputIsInt = (inputValue) => {
+    return inputValue.match(/^[0-9]+$/) //Check if input only consist of ints 
+};
+
 
 let typingTimeout = null;
 input.addEventListener('keyup', () => {
     if (typingTimeout !== null) clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
-        saveTimeInLocalStorage(input.value);
+        if (checkIfInputIsInt(input.value)) {
+            removeErrorMessage();
+            saveTimeInLocalStorage(input.value);
+        } else {
+            createErrorMessage();
+        };
     }, 500);
 });
 
@@ -62,13 +71,18 @@ const sendTimeToContentSide = (time) => {
 };
 
 const createErrorMessage = () => {
-    const p = document.createElement('p');
-    p.textContent = "Please use a number (seconds)"
-    p.classList.add('error-msg');
-    settings.appendChild(p);
+    const errorMsg = document.querySelector('.error-msg');
+    if (!errorMsg) {
+        const p = document.createElement('p');
+        p.textContent = "Please use a number (seconds)"
+        p.classList.add('error-msg');
+        settings.appendChild(p);
+    };
 };
 
 const removeErrorMessage = () => {
     const errorMsg = document.querySelector(".error-msg");
-    if (errorMsg) errorMsg.remove();
+    if (errorMsg) {
+        errorMsg.remove();
+    };
 };
