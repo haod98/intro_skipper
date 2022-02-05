@@ -5,6 +5,13 @@ const setLocalStorageSeconds = (seconds) => {
     return timeToSkip;
 };
 
+//Loads users saved seconds
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorageSecondsExist()) {
+        chrome.storage.sync.set({ seconds: getLocalStorageSeconds(), exists: true });
+    };
+});
+
 const getLocalStorageSeconds = () => {
     const DEFAULT_SECONDS = 60;
     const localStorage = window.localStorage;
@@ -18,12 +25,17 @@ const localStorageSecondsExist = () => {
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        if (request.getTime) {
-            let timeInSecond = setLocalStorageSeconds(request.getTime);
-            sendResponse({ updatedTime: `Time set: ${request.getTime}` });
+        if (request.time) {
+            let timeInSecond = setLocalStorageSeconds(request.time);
+            sendResponse({ updatedTime: `Time set: ${request.time}` });
             fastForwardVideo(timeInSecond);
+        } else if (request.setTime) {
+            setLocalStorageSeconds(request.setTime);
+            chrome.storage.sync.set({ seconds: getLocalStorageSeconds(), exists: true });
+            sendResponse({ updatedTime: `Time set: ${request.setTime}` });
         } else if (request.command === "fast-forward") {
             let timeInSeconds = getLocalStorageSeconds();
+            console.log(timeInSeconds);
             sendResponse({ updatedTime: `Time set: ${timeInSeconds}` });
             fastForwardVideo(timeInSeconds);
         };

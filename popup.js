@@ -2,19 +2,55 @@ const btn = document.querySelector(".skip");
 const input = document.querySelector('.input');
 const error_msg = document.querySelector('.errorMsg');
 const settings = document.querySelector('.settings');
-const fastForward = () => {
-    input.classList.remove('error');
-    let timeValue = document.querySelector('#time').value;
-    removeErrorMessage();
-    if (!timeValue.match(/^[0-9]+$/)) { //Check if input is an int
-        input.classList.add('error');
-        createErrorMessage();
-        return;
+
+window.addEventListener('DOMContentLoaded', async () => { //Load initial value
+    const chromeStorage = await chrome.storage.sync.get(null); //Get all values in chrome storage 
+    if (chromeStorage.exists) {
+        const chromeStoredSeconds = await chromeStorage.seconds;
+        input.value = chromeStoredSeconds;
+    } else {
+        input.value = "60";
     };
-    sendTimeToContentSide(timeValue);
+});
+
+const fastForward = () => {
+    let inputValue = input.value;
+    if (checkIfInputIsInt(inputValue)) {
+        removeErrorMessage();
+        sendTimeToContentSide(inputValue);
+    } else {
+        createErrorMessage();
+    };
+};
+
+const checkIfInputIsInt = (inputValue) => {
+    return inputValue.match(/^[0-9]+$/) //Check if input only consist of ints 
+};
+
+
+let typingTimeout = null;
+input.addEventListener('keyup', () => {
+    if (typingTimeout !== null) clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+        if (checkIfInputIsInt(input.value)) {
+            removeErrorMessage();
+            saveTimeInLocalStorage(input.value);
+        } else {
+            createErrorMessage();
+        };
+    }, 500);
+});
+
+const saveTimeInLocalStorage = (time) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, { setTime: time }, (response) => {
+            console.log(response.updatedTime);
+        });
+    });
 };
 
 btn.addEventListener('click', fastForward); //Pop up event 
+
 //Short cut listener
 chrome.runtime.onMessage.addListener(
     (request) => {
@@ -28,20 +64,25 @@ chrome.runtime.onMessage.addListener(
 
 const sendTimeToContentSide = (time) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { getTime: time }, (response) => {
+        chrome.tabs.sendMessage(tabs[0].id, { time: time }, (response) => {
             console.log(response.updatedTime);
         });
     });
 };
 
 const createErrorMessage = () => {
-    const p = document.createElement('p');
-    p.textContent = "Please use a number (seconds)"
-    p.classList.add('error-msg');
-    settings.appendChild(p);
+    const errorMsg = document.querySelector('.error-msg');
+    if (!errorMsg) {
+        const p = document.createElement('p');
+        p.textContent = "Please use a number (seconds)"
+        p.classList.add('error-msg');
+        settings.appendChild(p);
+    };
 };
 
 const removeErrorMessage = () => {
     const errorMsg = document.querySelector(".error-msg");
-    if (errorMsg) errorMsg.remove();
+    if (errorMsg) {
+        errorMsg.remove();
+    };
 };
