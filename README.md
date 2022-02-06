@@ -8,7 +8,7 @@ Since it is not in Google Extension Store you have to download the latest releas
 1. Open Google Chrome and insert ``chrome://extensions`` in the URL
 3. Enable ``Developer mode`` (In the right corner)
 4. Unzip `release.zip`
-5. Click ``Load unpacked`` and select the folder where the files is saved
+5. Click ``Load unpacked`` and select the folder where the files are located
 6. When everything is working you should see the Time Skipper extension loaded
 Bonus: For easier use, click on the puzzle-icon and pin Time Skipper extension 
 
