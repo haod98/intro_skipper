@@ -20,7 +20,7 @@ By pressing the button "Fast forward", the video should fast forward the seconds
 ## Shortcuts
 On Windows and Linux:
 
-Fast Forward: ``Alt`` + ``Shift`` + ``F`` will skip the video, without to open the pop up and/or pressing the "Fast forward"-button
+Fast Forward: ``Ctrl`` + ``Shift`` + ``F`` will skip the video, without to open the pop up and/or pressing the "Fast forward"-button
 
 On Mac:
 
